@@ -16,9 +16,7 @@ RUN apk add --no-cache \
      pip install -r requirements.txt          && \
      apk del --purge .build-deps
 
-CMD envsubst < apiconfig.py > userapiconfig.py && \
-    envsubst < config.json > user-config.json  && \
-    echo -e "${DNS_1}\n${DNS_2}\n" > dns.conf  && \
+CMD envsubst < docker-apiconfig.py > userapiconfig.py && \
     python server.py
     
-ENTRYPOINT ["python"]
+
