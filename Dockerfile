@@ -12,9 +12,13 @@ RUN apk add --no-cache \
         libc-dev \
         rust \
         cargo && \
-    pip install --no-cache-dir -r requirements.txt && \
-    cp docker-apiconfig.py userapiconfig.py && \
-    apk del --purge .build
+     cp  /usr/bin/envsubst  /usr/local/bin/   && \
+     pip install --upgrade pip                && \
+     pip install -r requirements.txt          && \
+     rm -rf ~/.cache && touch /etc/hosts.deny && \
+     apk del --purge .build-deps
 
-CMD ["server.py"]
-ENTRYPOINT ["python"]
+CMD envsubst < apiconfig.py > userapiconfig.py && \
+    envsubst < config.json > user-config.json  && \
+    echo -e "${DNS_1}\n${DNS_2}\n" > dns.conf  && \
+    python server.py
